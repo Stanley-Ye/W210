@@ -25,7 +25,7 @@ function submit2(){
     redirect: 'follow'
   };
   fetch("https://cjyiruowfd.execute-api.us-east-2.amazonaws.com/default/stylometry_beta?chunk_size=128", requestOptions)
-    .then(response => response.text())
+    .then(response => console.log(response.text()))
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
   
