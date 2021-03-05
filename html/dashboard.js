@@ -18,7 +18,8 @@ function submit2(){
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   var raw = JSON.stringify({"in_txt":textbox.value,"author_name":author.value});
-  console.log("DEBUG: " + raw);
+  console.log("DEBUG: ");
+  console.log(raw);
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
@@ -36,6 +37,6 @@ function submit2(){
     .catch(error => console.log('error', error));
   
   
-  console.log("AF-2");
+  console.log("END");
   //displayResponse2("hello-2");
 }
