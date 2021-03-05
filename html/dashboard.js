@@ -19,7 +19,6 @@ function submit2(){
   myHeaders.append("x-api-key", "G0W5V6A6WB9JcVms3IKxN5TVSYCVZX7z7IX5KgnT");
   myHeaders.append("Content-Type", "application/json");
 
-
   var raw = JSON.stringify({"in_txt":textbox.value,"author_name":author.value});
   console.log("DEBUG: ");
   console.log(raw);

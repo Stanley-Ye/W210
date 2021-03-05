@@ -16,8 +16,11 @@ function displayResponse2(text){
 
 function submit2(){
   var myHeaders = new Headers();
+  myHeaders.append("x-api-key", "G0W5V6A6WB9JcVms3IKxN5TVSYCVZX7z7IX5KgnT");
   myHeaders.append("Content-Type", "application/json");
+  
   var raw = JSON.stringify({"in_txt":textbox.value,"author_name":author.value});
+
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
@@ -25,16 +28,14 @@ function submit2(){
     redirect: 'follow'
   };
 
-
   var content = document.getElementById('response');
   var content2 = document.getElementById('response2');
 
-  fetch("https://cjyiruowfd.execute-api.us-east-2.amazonaws.com/default/stylometry_beta?chunk_size=128", requestOptions)
+  fetch("https://naocgyef4k.execute-api.us-east-2.amazonaws.com/default/stylometry_beta?chunk_size=128", requestOptions)
     .then(response => content.innerHTML = response)
     .then(result => content2.innerHTML = result)
     .catch(error => console.log('error', error));
   
   
-  console.log("AF-2");
-  //displayResponse2("hello-2");
+  console.log("END");
 }
