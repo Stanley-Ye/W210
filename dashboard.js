@@ -24,12 +24,17 @@ function submit2(){
     body: raw,
     redirect: 'follow'
   };
+
+
+  var content = document.getElementById('response');
+  var content2 = document.getElementById('response2');
+
   fetch("https://cjyiruowfd.execute-api.us-east-2.amazonaws.com/default/stylometry_beta?chunk_size=128", requestOptions)
-    .then(response => console.log(response.text()))
-    .then(result => console.log(result))
+    .then(response => content.innerHTML = response)
+    .then(result => content2.innerHTML = result)
     .catch(error => console.log('error', error));
   
   
   console.log("AF-2");
-  displayResponse2("hello-2");
+  //displayResponse2("hello-2");
 }
