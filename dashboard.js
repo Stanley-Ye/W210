@@ -19,7 +19,7 @@ var myHeaders = new Headers();
 myHeaders.append("x-api-key", "G0W5V6A6WB9JcVms3IKxN5TVSYCVZX7z7IX5KgnT");
 myHeaders.append("Content-Type", "application/json");
 myHeaders.append("Access-Control-Allow-Origin", '*');
-//myHeaders.append("Origin", "https://stanley-ye.github.io");
+myHeaders.append("Origin", "https://stanley-ye.github.io");
 myHeaders.append("Access-Control-Allow-Methods", 'GET, POST, OPTIONS, PUT, DELETE');
 myHeaders.append("Access-Control-Allow-Headers", 'Content-Type,Authorization');
 myHeaders.append("Access-Control-Allow-Credentials", 'true');
@@ -47,5 +47,5 @@ var content = document.getElementById('response');
   
   
   console.log("AF");
-  displayResponse2("hello");
+  displayResponse2("hello-2");
 }
