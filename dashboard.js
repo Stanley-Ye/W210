@@ -29,6 +29,7 @@ var raw = JSON.stringify({"in_txt":"It was the best of times","author_name":"Jan
   
   var requestOptions = {
   method: 'POST',
+  mode: 'no-cors',
   headers: myHeaders,
   body: raw,
   redirect: 'follow'
