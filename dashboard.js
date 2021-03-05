@@ -32,8 +32,8 @@ function submit2(){
   var content2 = document.getElementById('response2');
 
   fetch("https://naocgyef4k.execute-api.us-east-2.amazonaws.com/default/stylometry_beta?chunk_size=128", requestOptions)
-    .then(response => content.innerHTML = response)
-    .then(result => content2.innerHTML = result)
+    .then(response => content.innerHTML = response.text())
+    .then(result => console.log("RESULT: " + result))
     .catch(error => console.log('error', error));
   
   
