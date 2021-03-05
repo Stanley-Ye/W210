@@ -18,10 +18,13 @@ function submit2(){
 var myHeaders = new Headers();
 myHeaders.append("x-api-key", "G0W5V6A6WB9JcVms3IKxN5TVSYCVZX7z7IX5KgnT");
 myHeaders.append("Content-Type", "application/json");
-myHeaders.append("Access-Control-Allow-Origin", "*");
+myHeaders.append("Access-Control-Allow-Origin", '*');
 myHeaders.append("Origin", "https://stanley-ye.github.io");
-myHeaders.append("Access-Control-Request-Method", "POST");
-myHeaders.append("Access-Control-Request-Headers", "Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token");
+myHeaders.append("Access-Control-Allow-Methods", 'GET, POST, OPTIONS, PUT, DELETE');
+myHeaders.append("Access-Control-Allow-Headers", 'Content-Type,Authorization');
+myHeaders.append("Access-Control-Allow-Credentials", 'true');
+
+
 var raw = JSON.stringify({"in_txt":"It was the best of times","author_name":"Jane Austen"});
   
   var requestOptions = {
