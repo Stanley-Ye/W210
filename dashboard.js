@@ -19,6 +19,9 @@ var myHeaders = new Headers();
 myHeaders.append("x-api-key", "G0W5V6A6WB9JcVms3IKxN5TVSYCVZX7z7IX5KgnT");
 myHeaders.append("Content-Type", "application/json");
 myHeaders.append("Access-Control-Allow-Origin", "*");
+myHeaders.append("Origin", "https://stanley-ye.github.io");
+myHeaders.append("Access-Control-Request-Method", "POST");
+myHeaders.append("Access-Control-Request-Headers", "Content-Type");
 var raw = JSON.stringify({"in_txt":"It was the best of times","author_name":"Jane Austen"});
   
   var requestOptions = {
