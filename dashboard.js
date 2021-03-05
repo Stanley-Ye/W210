@@ -46,6 +46,6 @@ var content = document.getElementById('response');
   .catch(error => content.innerHTML = error.message);
   
   
-  console.log("AF");
+  console.log("AF-2");
   displayResponse2("hello-2");
 }
