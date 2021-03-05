@@ -24,7 +24,8 @@ var raw = JSON.stringify({"in_txt":"It was the best of times","author_name":"Jan
   method: 'POST',
   headers: myHeaders,
   body: raw,
-  redirect: 'follow'
+  redirect: 'follow',
+  mode: 'no-cors'
 };
 
 	console.log("BF");
