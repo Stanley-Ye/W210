@@ -1,26 +1,14 @@
-function submit(){
-  var textbox = document.getElementById("textbox");
-  var response = document.getElementById("response");
-  response.value = "HI:" + textbox.value;
-}
+const chunk_size = '128';
 
-function displayResponse(text){
-  var response = document.getElementById("response");
-  response.value = text;
-}
-
-function displayResponse2(text){
-  var response2 = document.getElementById("response2");
-  response2.value = text;
-}
-
-function submit2(){
+function submit_bert(){
   var myHeaders = new Headers();
-  myHeaders.append("x-api-key", "G0W5V6A6WB9JcVms3IKxN5TVSYCVZX7z7IX5KgnT");
+  myHeaders.append("x-api-key", config.bert_key);
   myHeaders.append("Content-Type", "application/json");
-  
-  var raw = JSON.stringify({"in_txt":textbox.value,"author_name":author.value});
 
+  var raw = JSON.stringify({"in_txt":textbox.value,"author_name":author.value});
+  console.log("DEBUG: ");
+  console.log(raw);
+  
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
@@ -28,14 +16,31 @@ function submit2(){
     redirect: 'follow'
   };
 
-  var content = document.getElementById('response');
-  var content2 = document.getElementById('response2');
+  fetch(config.bert_end_point + "?chunk_size=" + chunk_size, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+}
 
-  fetch("https://naocgyef4k.execute-api.us-east-2.amazonaws.com/default/stylometry_beta?chunk_size=128", requestOptions)
-    .then(response => console.log(response))
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+
+function submit_stylometry(){
+  var myHeaders = new Headers();
+  myHeaders.append("x-api-key", config.style_key);
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({"in_txt":textbox.value,"author_name":author.value});
+  console.log("DEBUG: ");
+  console.log(raw);
   
-  
-  console.log("END");
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  fetch(config.style_end_point + "?chunk_size=" + chunk_size, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
 }

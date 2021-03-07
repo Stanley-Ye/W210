@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html>
 
+<script type='text/javascript' src='config.js'></script>
 <script src="dashboard.js"></script>
-
-
-<head>
-  <meta http-equiv=“Pragma” content=”no-cache”>
-  <meta http-equiv=“Expires” content=”-1″>
-  <meta http-equiv=“CACHE-CONTROL” content=”NO-CACHE”>
-</head>
 
 <body>
     <label for="author">Select Author:</label>
@@ -27,13 +21,14 @@
 <textarea id="textbox" name="textbox" rows="5" cols="100"></textarea>
 
 <br><br>
-<button id='submit_button' onclick="submit2()">Submit</button>
+<button id='submit_stylometry_button' onclick="submit_stylometry()">Submit-stylometry</button>
+<button id='submit_bert_button' onclick="submit_bert()">Submit-bert</button>
 <br><br>
-<label for="response">Results1:</label>
+<label for="response">Debug:</label>
 <br>
 <textarea id="response" name="response" rows="5" cols="100"></textarea>
 <br><br>
-<label for="response2">Results2:</label>
+<label for="response2">Debug_2:</label>
 <br>
 <textarea id="response2" name="response" rows="5" cols="100"></textarea>
 </body>

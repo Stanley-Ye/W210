@@ -1,28 +1,46 @@
-//import React, { Component } from 'react';
-//console.log(process.env.REACT_APP_API_KEY_stylometry);
-
-require('dotenv').config()
-const key1 = process.env.KEY_bert;
-const key2 = process.env.KEY_stylometry;
-console.log(key1);
-console.log(key2);
-
-
-
-const result = dotenv.config()
- 
-if (result.error) {
-  throw result.error
-}
- 
-console.log(result.parsed)
-
-
+const chunk_size = '128';
 
 function submit_bert(){
-  console.log("submit_bert");
+  var myHeaders = new Headers();
+  myHeaders.append("x-api-key", config.bert_key);
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({"in_txt":textbox.value,"author_name":author.value});
+  console.log("DEBUG: ");
+  console.log(raw);
+  
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  fetch(config.bert_end_point + "?chunk_size=" + chunk_size, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
 }
 
+
 function submit_stylometry(){
-  console.log("submit_stylometry");
+  var myHeaders = new Headers();
+  myHeaders.append("x-api-key", config.style_key);
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({"in_txt":textbox.value,"author_name":author.value});
+  console.log("DEBUG: ");
+  console.log(raw);
+  
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  fetch(config.style_end_point + "?chunk_size=" + chunk_size, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
 }
