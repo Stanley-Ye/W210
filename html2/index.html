@@ -1,0 +1,97 @@
+<div class="chart">
+    <h1>EssAi Mockup</h1>
+    <br>
+  </div>
+  <h4>Select Metric</h4>
+      <!--
+      <div>
+          <input type="radio" id="Sentence Lengths" name="yaxis" value="Sentence Lengths" checked>
+          <label for="Sentence Lengths" >Sentence Lengths</label><br>
+          <input type="radio" id="Shannon Entropy" name="yaxis" value= "Shannon Entropy">
+          <label for="Shannon Entropy" >Shannon Entropy</label><br>
+      </div>
+    -->
+    <br>
+    <br>
+    <button onclick="changeSentenceOrder('index')">Order by Appearance</button>
+    <br>
+    <button onclick="changeSentenceOrder('ProbabilityRank')">Order by Probability</button>
+    <br>
+    <div id="chart"></div>
+    <div class="chart-footer">
+      <br />
+    </div>
+  </div>
+  <br />
+  <br />
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script>
+    /* globals crossfiler */
+    var width = 800,
+    height = 500,
+    defaultOpacity = 0.4;
+    var svg = d3.select("#chart")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
+    var fontSize = 18;
+    var spaceSize = 2;
+    function changeSentenceOrder(column){
+      d3.selectAll(".user_sentences")
+      .transition()
+      .duration(800)
+      .ease(d3.easeLinear)
+      .attr("y", function(d, i){
+        return (d[column]  * (fontSize + spaceSize));
+      });
+    }
+    d3.json("order.json", function (myData) {
+    //=========================================================================
+    // Properly cast all incoming values
+    //=========================================================================
+    myData.forEach(function(d){
+      d.Author = d.Author;
+      d.Text = d.Text;
+      d.index =  +d.index;
+      d.ProbabilityRank =  +d.ProbabilityRank;
+      d.sentenceLengthByChar = +d.sentenceLengthByChar;
+      d.shannonEntropy = +d.shannonEntropy;
+      d.Probability = +d.Probability;
+    })
+      //=========================================================================
+    // Set Dimensions
+    //=========================================================================
+    var margin = { top: 30, right: 180, bottom: 50, left: 60 },
+    iwidth = width - margin.left - margin.right,
+    iheight = height - margin.top - margin.bottom
+    axisLabelShift = 40;
+    //=========================================================================
+    // gDrawing
+    //=========================================================================
+    var gDrawing = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    //=========================================================================
+    // Generate Text List
+    //=========================================================================
+    var colorScale = d3
+    .scaleLinear()
+    .domain([0, 100])
+    .range(["red", "green"]);
+    var scatter = gDrawing.append('g')
+    .selectAll("text")
+    .data(myData)
+    .enter()
+    .filter(function(d) { return d.Author == "User";})
+    .append("text")
+    .attr("class", "user_sentences")
+    .text(function(d) {return d.Text; })
+    .attr("x", 10) 
+    .attr("y", function(d, i) {
+      return (i * (fontSize + spaceSize));
+    })
+    .attr("fill", function(d, i){
+      return colorScale(d.Probability);
+    });
+  });
+</script>
