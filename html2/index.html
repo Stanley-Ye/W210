@@ -1,5 +1,5 @@
 <div class="chart">
-    <h1>EssAI Mockup-4</h1>
+    <h1>EssAI Mockup-5</h1>
     <br>
   </div>
   <h4>Select Metric</h4>
@@ -45,7 +45,10 @@
         return (d[column]  * (fontSize + spaceSize));
       });
     }
-    d3.json("https://drive.google.com/file/d/1bc_MXAtsJIn6IYHpXoLguTbb1In4zAk2/view?usp=sharing", function (myData) {
+
+    var json = [{"index":0,"Author":"User","Text":"\nI went to the beach and stretched myself out.\n\n","sentenceLengthByChar":48,"shannonEntropy":2.1972245773,"Probability":65,"ProbabilityRank":5.0},{"index":1,"Author":"User","Text":"A ferryboat trudged across the river, devoid of any other lights.\n\n","sentenceLengthByChar":67,"shannonEntropy":2.3978952728,"Probability":46,"ProbabilityRank":3.0},{"index":2,"Author":"User","Text":"The moon rose and I become aware of the \n\n","sentenceLengthByChar":42,"shannonEntropy":2.1972245773,"Probability":96,"ProbabilityRank":8.0},{"index":3,"Author":"User","Text":"I like to eat eggs and toast.\n\n","sentenceLengthByChar":31,"shannonEntropy":1.9459101491,"Probability":64,"ProbabilityRank":4.0},{"index":4,"Author":"User","Text":"And fish - fish is very tasty.\n\n","sentenceLengthByChar":32,"shannonEntropy":1.7478680975,"Probability":90,"ProbabilityRank":6.0},{"index":5,"Author":"User","Text":"Do I like eggs or toast or fish more?","sentenceLengthByChar":37,"shannonEntropy":2.0431918705,"Probability":45,"ProbabilityRank":2.0},{"index":6,"Author":"User","Text":"It's difficult to say.","sentenceLengthByChar":22,"shannonEntropy":1.3862943611,"Probability":95,"ProbabilityRank":7.0},{"index":7,"Author":"User","Text":"But I think I like fish more.\n\n","sentenceLengthByChar":31,"shannonEntropy":1.7478680975,"Probability":22,"ProbabilityRank":1.0}];
+
+    d3.json(json, function (myData) {
     //=========================================================================
     // Properly cast all incoming values
     //=========================================================================
