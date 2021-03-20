@@ -13,6 +13,8 @@
       <h1>EssAi Mockup</h1>
       <br>
     </div>
+
+    <h1> Sentence Level </h1>
     <h4>Select Metric</h4>
       <button onclick="changeSentenceOrder('index')">Order by Appearance</button>
       <br>
@@ -35,6 +37,8 @@
 
 
     <br>
+    <br>
+    <h1> Stylometrics </h1>
     <br>
     <div id="my_dataviz"></div>
 
@@ -226,27 +230,32 @@
 		          .attr("stroke", "black")
 		          .style("width", 80);
 
+		          // Add user data points
 
-		          // Add individual points with jitter
 		          d3.json("static/data/user_long.json", function(data){
-
-		          	var jitterWidth = 50;
+                    var jitter = true; 
+		            var jitterWidth = 50;
 		          	box
 		          		.selectAll("indPoints")
 		          		.data(data)
 		          		.enter()
-		          		//.filter(function(d){return(d.key == metric)})
 		          		.append("circle")
-		          		.attr("cx", function(d){return x(d.Metric)})
-		          		//.attr("cx", function(d){
-		          		//	return(x(d.Metric) - jitterWidth/2 + Math.random()*jitterWidth )
-		          		//})
+		          		//.attr("cx", function(d){return x(d.Metric)})
+		          		.attr("cx", function(d){
+		          			if (jitter){
+		          				return(x(d.Metric) - jitterWidth/2 + Math.random()*jitterWidth );
+		          			}else{
+		          				return (x(d.Metric));
+		          			}
+		          		
+		          		})
 		          		.attr("cy", function(d){return(y(d.Value))})
 		          		.attr("r", 4)
 		          		.style("fill", "white")
 		          		.attr("stroke", "black");
+		             
+		          });
 
-		          	});
 	        };
 
 	 // This is where my code more or less starts.
