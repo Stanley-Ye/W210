@@ -135,195 +135,209 @@
 
 
     <script>
+
+    // IMPORTANT CITATION!!!!
+	// This code is based off the code here: https://www.d3-graph-gallery.com/graph/boxplot_show_individual_points.html
+
+	// It will be modified and customized once we settle on the eventual visualizations.
+
+
+
       // set the dimensions and margins of the graph
       var margin_box = {top: 10, right: 30, bottom: 30, left: 40},
-        width_box = 660 - margin_box.left - margin_box.right,
-        height_box = 400 - margin_box.top - margin_box.bottom;
+      width_box = 660 - margin_box.left - margin_box.right,
+      height_box = 400 - margin_box.top - margin_box.bottom;
 
      // append the svg object to the body of the page
-      var box = d3
-      .select("#my_dataviz")
-      .append("svg")
-      .attr("width", width_box + margin_box.left + margin_box.right)
-      .attr("height", height_box + margin_box.top + margin_box.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin_box.left + "," + margin_box.top + ")");
+     var box = d3
+     .select("#my_dataviz")
+     .append("svg")
+     .attr("width", width_box + margin_box.left + margin_box.right)
+     .attr("height", height_box + margin_box.top + margin_box.bottom)
+     .append("g")
+     .attr("transform", "translate(" + margin_box.left + "," + margin_box.top + ")");
+
+     function generateBoxPlot(sumstat, max_val){
 
 
-      d3.json("static/data/ScottFitzgerald_top5.json", function(orig_data) {
+
+	  			//=======================================================================
+	  			// Add Scale
+	  			//=======================================================================
+
+		  			var x = d3.scaleBand()
+		  					.range([ 0, width_box])
+		  					.domain([sumstat[0].key])
+		  					.paddingInner(1)
+		  					.paddingOuter(.5);
+
+		  			box.append("g")
+		  				.attr("class", ".boxplot")
+		  				.attr("transform", "translate(0," + height_box + ")")
+		  				.call(d3.axisBottom(x));
 
 
-            let intermediate_dict = {};
+			        // Show the Y scale
+			        var yCushion = 1.2; 
+			        var y = d3.scaleLinear()
+			            .domain([0, (max_val * yCushion)])
+			            .range([height_box, 0]);
+
+			        box.append("g").call(d3.axisLeft(y))
+
+
+		            // Show the main vertical line
+		            box
+		            .selectAll("vertLines")
+		            .data(sumstat)
+		            .enter()
+		            .append("line")
+		            .attr("x1", function(d){return(x(d.key))})
+		            .attr("x2", function(d){return(x(d.key))})
+		            .attr("y1", function(d){return(y(d.value.min))})
+		            .attr("y2", function(d){return(y(d.value.max))})
+		            .attr("stroke", "black")
+		            .style("width", 40);
+
+		            // rectangle for the main box
+		            var boxWidth = 100;
+		            box
+		            .selectAll("boxes")
+		            .data(sumstat)
+		            .enter()
+		            .append("rect")
+		            .attr("x", function(d){return(x(d.key)-boxWidth/2)})
+		            .attr("y", function(d){return(y(d.value.percentile_75))})
+		            .attr("height", function(d){return(y(d.value.percentile_25)-y(d.value.percentile_75))})
+		            .attr("width", boxWidth )
+		            .attr("stroke", "black")
+		            .style("fill", "#346beb")
+
+		          // Show the median
+		          box
+		          .selectAll("medianLines")
+		          .data(sumstat)
+		          .enter()
+		          .append("line")
+		          .attr("x1", function(d){return(x(d.key)-boxWidth/2) })
+		          .attr("x2", function(d){return(x(d.key)+boxWidth/2) })
+		          .attr("y1", function(d){return(y(d.value.percentile_50))})
+		          .attr("y2", function(d){return(y(d.value.percentile_50))})
+		          .attr("stroke", "black")
+		          .style("width", 80);
+
+
+		          // Add individual points with jitter
+		          d3.json("static/data/user_long.json", function(data){
+
+		          	var jitterWidth = 50;
+		          	box
+		          		.selectAll("indPoints")
+		          		.data(data)
+		          		.enter()
+		          		//.filter(function(d){return(d.key == metric)})
+		          		.append("circle")
+		          		.attr("cx", function(d){return x(d.Metric)})
+		          		//.attr("cx", function(d){
+		          		//	return(x(d.Metric) - jitterWidth/2 + Math.random()*jitterWidth )
+		          		//})
+		          		.attr("cy", function(d){return(y(d.Value))})
+		          		.attr("r", 4)
+		          		.style("fill", "white")
+		          		.attr("stroke", "black");
+
+		          	});
+	        };
+
+	 // This is where my code more or less starts.
+
+     d3.json("static/data/ScottFitzgerald_top5.json", function(orig_data) {
+
+
+     	let intermediate_dict = {};
 
             // First transform the data into the format we want ----
-            // Credit to Zak Whittington for this code.
+            // Credit to Zak Whittington for this collaboration
             function transform (orig_data){
 
-              for (const orig_obj of orig_data) {
-                if (! (orig_obj.Metric in intermediate_dict))
-                  intermediate_dict[orig_obj.Metric] = {};
-                  intermediate_dict[orig_obj.Metric][orig_obj.Statistic] = orig_obj.Value;
-                }
-              console.log(intermediate_dict);
-              let sumstat = [];
-              for (const [key, val] of Object.entries(intermediate_dict)) {
-                sumstat.push({
-                  key: key,
-                  value: val,
-                });
-              }
-             console.log(sumstat);
-              return sumstat;
-          }
-
-          var sumstat = transform(orig_data);
-
-
-      var button = d3.select("#my_dataviz").append('select');
-
-      button // Add a button
-        .selectAll('myOptions') // Next 4 lines add 6 options = 6 colors
-        .data(Object.keys(intermediate_dict))
-        .enter()
-        .append('option')
-        .text(function (d) { return d; }) // text showed in the menu
-        .attr("value", function (d) { return d; }) ;
-
-
-// IMPORTANT CITATION!!!!
-// This code is based off the code here: https://www.d3-graph-gallery.com/graph/boxplot_show_individual_points.html
-
-// It will be modified and customized once we settle on the eventual visualizations.
-
-          // Show the X scale
-          var x = d3.scaleBand()
-            .range([ 0, width_box])
-            .domain(Object.keys(intermediate_dict))
-            .paddingInner(1)
-            .paddingOuter(.5);
-
-            box.append("g")
-            .attr("transform", "translate(0," + height_box + ")")
-            .call(d3.axisBottom(x));
-
-            var max_val = 0;
-            for(const obj of orig_data){
-              if(obj.Value > max_val){
-                max_val = obj.Value;
-              }
+            	for (const orig_obj of orig_data) {
+            		if (! (orig_obj.Metric in intermediate_dict))
+            			intermediate_dict[orig_obj.Metric] = {};
+            		intermediate_dict[orig_obj.Metric][orig_obj.Statistic] = orig_obj.Value;
+            	}
+            	console.log(intermediate_dict);
+            	let sumstat = [];
+            	for (const [key, val] of Object.entries(intermediate_dict)) {
+            		sumstat.push({
+            			key: key,
+            			value: val,
+            		});
+            	}
+            	console.log(sumstat);
+            	return sumstat;
             }
- 
-            console.log(max_val);
 
-            // Show the Y scale
-            var y = d3.scaleLinear()
-              .domain([0, max_val])
-              .range([height_box, 0]);
+        var data = transform(orig_data);
 
-            box.append("g").call(d3.axisLeft(y))
+        // =======================================================================
+  	    // Add Button
+  	    // =======================================================================
+  	    var button = d3.select("#my_dataviz").append('select');
 
-          function genGraph (sumstat){
+	    button 
+	        .selectAll('options') 
+	        .data(Object.keys(intermediate_dict))
+	        .enter()
+	        .append('option')
+	        .text(function (d) { return d; })
+	        .attr("value", function (d) { return d; }) ;
 
-
-            // Show the main vertical line
-            box
-            .selectAll("vertLines")
-            .data(sumstat)
-            .enter()
-            .append("line")
-            .attr("x1", function(d){return(x(d.key))})
-            .attr("x2", function(d){return(x(d.key))})
-            .attr("y1", function(d){return(y(d.value.min))})
-            .attr("y2", function(d){return(y(d.value.max))})
-            .attr("stroke", "black")
-            .style("width", 40);
-
-            // rectangle for the main box
-            var boxWidth = 100;
-            box
-            .selectAll("boxes")
-            .data(sumstat)
-            .enter()
-            .append("rect")
-            .attr("x", function(d){return(x(d.key)-boxWidth/2)})
-            .attr("y", function(d){return(y(d.value.percentile_75))})
-            .attr("height", function(d){return(y(d.value.percentile_25)-y(d.value.percentile_75))})
-            .attr("width", boxWidth )
-            .attr("stroke", "black")
-            .style("fill", "#346beb")
-
-          // Show the median
-            box
-            .selectAll("medianLines")
-            .data(sumstat)
-            .enter()
-            .append("line")
-            .attr("x1", function(d){return(x(d.key)-boxWidth/2) })
-            .attr("x2", function(d){return(x(d.key)+boxWidth/2) })
-            .attr("y1", function(d){return(y(d.value.percentile_50))})
-            .attr("y2", function(d){return(y(d.value.percentile_50))})
-            .attr("stroke", "black")
-            .style("width", 80);
+        function genSumStatGraph (data, metric){
 
 
-          // Add individual points with jitter
-          d3.json("static/data/user_long.json", function(data){
+  			// =======================================================================
+  			// Filter for metric
+  			// =======================================================================
 
-          var jitterWidth = 50;
-          box
-            .selectAll("indPoints")
-            .data(data)
-            .enter()
-            .append("circle")
-            .attr("cx", function(d){
-              return(x(d.Metric) - jitterWidth/2 + Math.random()*jitterWidth )
-            })
-            .attr("cy", function(d){return(y(d.Value))})
-            .attr("r", 4)
-            .style("fill", "white")
-            .attr("stroke", "black");
+  			var sumstat = [];
 
-          });
+  			for(const level of data){
+  				if (level.key == metric){
+  					sumstat.push(level)
+  				}
+  			}
+
+  			 var max_val = 0;
+  			for(const obj of sumstat){
+  				if(obj.value.max > max_val){
+  					max_val = obj.value.max;
+  				}
+  			}
+
+         	generateBoxPlot(sumstat, max_val)
         };
 
- 
-  // When the button is changed, run the updateChart function
 
-  function pickMetric (d) {
+  		// When the button is changed, run the updateChart function
 
-    // recover the option that has been chosen
-    var selectedOption = d3.select(this).property("value")
-       console.log(selectedOption)
-       for (const obj of sumstat){
-          if(obj.key == selectedOption){
-            var stat = obj
-          }
-       };
-       var data = sumstat[selectedOption];
-       console.log(stat)
-       // run the updateChart function with this selected option
-      box
-       .selectAll("vertLines")
-       .remove();
+  		function pickMetric (d) {
 
-      box
-       .selectAll("boxes")
-       .remove();
+    		box
+      			.selectAll("*")
+      			.remove();
 
-      box
-       .selectAll("medianLines")
-       .remove();
+      		genSumStatGraph(data, d3.select(this).property("value"));
+   		};
 
-       genGraph(stat);
-  };
+   		// Initialize
+   		button.on("change", pickMetric);
+   		genSumStatGraph(data, button.property("value"));
 
-  button.on("change", pickMetric);
+});
 
-  genGraph(sumstat);
-
-
-  });
 </script>
+
+
 
 
 </body>
