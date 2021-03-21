@@ -149,19 +149,19 @@
 
       // set the dimensions and margins of the graph
       var margin_box = {top: 10, right: 30, bottom: 30, left: 40},
-      width_box = 660 - margin_box.left - margin_box.right,
-      height_box = 400 - margin_box.top - margin_box.bottom;
+      	width_box = 660 - margin_box.left - margin_box.right,
+      	height_box = 400 - margin_box.top - margin_box.bottom;
 
      // append the svg object to the body of the page
      var box = d3
-     .select("#my_dataviz")
-     .append("svg")
-     .attr("width", width_box + margin_box.left + margin_box.right)
-     .attr("height", height_box + margin_box.top + margin_box.bottom)
-     .append("g")
-     .attr("transform", "translate(" + margin_box.left + "," + margin_box.top + ")");
+     	.select("#my_dataviz")
+     	.append("svg")
+     	.attr("width", width_box + margin_box.left + margin_box.right)
+     	.attr("height", height_box + margin_box.top + margin_box.bottom)
+     	.append("g")
+     	.attr("transform", "translate(" + margin_box.left + "," + margin_box.top + ")");
 
-     function generateBoxPlot(sumstat, max_val){
+     function generateBoxPlot(sumstat, userData, max_val){
 
 
 
@@ -232,7 +232,33 @@
 
 		          // Add user data points
 
-		          d3.json("static/data/user_long.json", function(data){
+                    var jitter = true; 
+		            var jitterWidth = 50;
+		          	box
+		          		.selectAll("indPoints")
+		          		.data(userData)
+		          		.enter()
+		          		.append("circle")
+		          		//.attr("cx", function(d){return x(d.Metric)})
+		          		.attr("cx", function(d){
+		          			if (jitter){
+		          				return(x(d.Metric) - jitterWidth/2 + Math.random()*jitterWidth );
+		          			}else{
+		          				return (x(d.Metric));
+		          			}
+		          		
+		          		})
+		          		.attr("cy", function(d){return(y(d.Value))})
+		          		.attr("r", 4)
+		          		.style("fill", "white")
+		          		.attr("stroke", "black");
+
+		          /*
+
+		          var userData1 = "https://github.com/Stanley-Ye/W210/blob/main/visualization/static/data/user_long.json";
+
+		          d3.json(userData1, function(data){
+                    
                     var jitter = true; 
 		            var jitterWidth = 50;
 		          	box
@@ -255,13 +281,24 @@
 		          		.attr("stroke", "black");
 		             
 		          });
+		          */
 
 	        };
 
 	 // This is where my code more or less starts.
+	 var author = "https://github.com/Stanley-Ye/W210/blob/main/visualization/static/data/ScottFitzgerald_top5.json";
+     var temp = "static/data/ScottFitzgerald_top5.json";
+	 
+     // STANLEY LOOK HERE:
+	 var link = "static/data/composite.json";
 
-     d3.json("static/data/ScottFitzgerald_top5.json", function(orig_data) {
+     d3.json(link, function(new_data) {
 
+
+     	var orig_data = new_data.author_top5;
+     	var userData = new_data.user_metrics; 
+
+     	console.log(userData);
 
      	let intermediate_dict = {};
 
@@ -301,7 +338,7 @@
 	        .text(function (d) { return d; })
 	        .attr("value", function (d) { return d; }) ;
 
-        function genSumStatGraph (data, metric){
+        function genSumStatGraph (data, userData, metric){
 
 
   			// =======================================================================
@@ -316,14 +353,29 @@
   				}
   			}
 
-  			 var max_val = 0;
+  			var filteredUserData = [];
+  			for(const level of userData){
+  				if (level.Metric == metric){
+  					filteredUserData.push(level)
+  				}
+  			}
+
+
+  			var max_val = 0;
   			for(const obj of sumstat){
   				if(obj.value.max > max_val){
   					max_val = obj.value.max;
   				}
   			}
 
-         	generateBoxPlot(sumstat, max_val)
+  			for(const obj of filteredUserData){
+  				if(obj.Value > max_val){
+  					console.log(obj.Value);
+  					max_val = obj.Value;
+  				}
+  			}
+
+         	generateBoxPlot(sumstat, userData, max_val)
         };
 
 
@@ -335,12 +387,13 @@
       			.selectAll("*")
       			.remove();
 
-      		genSumStatGraph(data, d3.select(this).property("value"));
+      		genSumStatGraph(data, userData, d3.select(this).property("value"));
    		};
 
    		// Initialize
    		button.on("change", pickMetric);
-   		genSumStatGraph(data, button.property("value"));
+   		genSumStatGraph(data,  userData, button.property("value"));
+
 
 });
 
