@@ -1,0 +1,483 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>EssAI Mockup</title>
+
+    <link rel="stylesheet" href="static/css/main.css" />
+
+  </head>
+  <body style = "height:100%;padding:0px;background-image:url('parchment.png');background-size:100%100%;">
+  	 
+  <div class="chart" >
+
+      <h1>EssAi Mockup</h1>
+      <br>
+    </div>
+
+    <h1> Sentence Level </h1>
+    <h4>Select Metric</h4>
+      <button onclick="changeSentenceOrder('index')">Order by Appearance</button>
+      <br>
+      <button onclick="changeSentenceOrder('ProbabilityRank')">Order by Probability</button>
+      <br>
+
+
+
+      <div id="chart"></div>
+      <div class="chart-footer">
+
+
+
+        <br />
+
+      </div>
+    </div>
+
+
+
+
+    <br>
+    <br>
+    <h1> Stylometrics </h1>
+    <br>
+    <div id="metric-toggle"></div>
+    <br>
+    <div id="description"></div>
+    <br>
+    <br>
+    <div id="my_dataviz"></div>
+    <br>
+   
+
+
+
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script>
+
+      var width = 800,
+          height = 500,
+          defaultOpacity = 0.4;
+
+      var svg = d3.select("#chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+
+      var fontSize = 18;
+      var spaceSize = 2;
+
+      function changeSentenceOrder(column){
+        d3.selectAll(".user_sentences")
+          .transition()
+          .duration(800)
+          .ease(d3.easeLinear)
+          .attr("y", function(d, i){
+            return (d[column]  * (fontSize + spaceSize));
+          });
+      }
+
+      // STANLEY LOOK HERE (this is the sentence level probabilities)
+      var sentenceLink = "static/data/scatter.json";
+
+      d3.json(sentenceLink, function (myData) {
+
+        //=========================================================================
+        // Properly cast all incoming values
+        //=========================================================================
+        myData.forEach(function(d){
+          d.Author = d.Author;
+          d.Text = d.Text;
+          d.index =  +d.index;
+          d.ProbabilityRank =  +d.ProbabilityRank;
+          d.sentenceLengthByChar = +d.sentenceLengthByChar;
+          d.shannonEntropy = +d.shannonEntropy;
+          d.Probability = +d.Probability;
+        })
+
+        //=========================================================================
+        // Set Dimensions
+        //=========================================================================
+
+        var margin = { top: 30, right: 180, bottom: 50, left: 60 },
+          iwidth = width - margin.left - margin.right,
+          iheight = height - margin.top - margin.bottom
+          axisLabelShift = 40;
+
+        //=========================================================================
+        // gDrawing
+        //=========================================================================
+
+        var gDrawing = svg
+          .append("g")
+          .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+        //=========================================================================
+        // Generate Text List
+        //=========================================================================
+
+        var colorScale = d3
+          .scaleLinear()
+          .domain([0, 100])
+          .range(["red", "green"]);
+
+        var scatter = gDrawing
+          .append('g')
+          .selectAll("text")
+          .data(myData)
+          .enter()
+          .filter(function(d) { return d.Author == "User";})
+          .append("text")
+          .attr("class", "user_sentences")
+          .text(function(d) {return d.Text; })
+          .attr("x", 10) 
+          .attr("y", function(d, i) {
+            return (i * (fontSize + spaceSize));
+          })
+          .attr("fill", function(d, i){
+          	if (d.Probability > 70){
+          		return "green"
+          	}else{
+          		return "red"
+          	}
+            //return colorScale(d.Probability);
+          });
+
+      });
+
+    </script>
+    <!-- <script src="static/js/main.js"></script> -->
+
+
+
+
+
+    <script>
+
+    // IMPORTANT CITATION!!!!
+	// This code is based off the code here: https://www.d3-graph-gallery.com/graph/boxplot_show_individual_points.html
+
+	// It will be modified and customized once we settle on the eventual visualizations.
+
+
+
+      // set the dimensions and margins of the graph
+      var margin_box = {top: 10, right: 30, bottom: 30, left: 40},
+      	width_box = 660 - margin_box.left - margin_box.right,
+      	height_box = 400 - margin_box.top - margin_box.bottom;
+
+     // append the svg object to the body of the page
+     var box = d3
+     	.select("#my_dataviz")
+     	.append("svg")
+     	.attr("width", width_box + margin_box.left + margin_box.right)
+     	.attr("height", height_box + margin_box.top + margin_box.bottom)
+     	.append("g")
+     	.attr("transform", "translate(" + margin_box.left + "," + margin_box.top + ")");
+
+     function generateBoxPlot(sumstat, userData, max_val, metric){
+
+
+	  			//=======================================================================
+	  			// Add Scale
+	  			//=======================================================================
+
+	  			var strokeWidth = 3; 
+	  			var fontSize = 12;
+
+	  			/*
+	  			var new_collection = []
+	  			for (obj of sumstat){
+	  				obj.key = metric;
+	  				new_collection.push(obj)
+	  				console.log(sumstat)
+	  			}
+	  			*/
+
+		  			var x = d3.scaleBand()
+		  					.range([ 0, width_box])
+		  				    .domain([sumstat[0].key])
+		  					.paddingInner(1)
+		  					.paddingOuter(.5);
+
+		  			
+		  			box.append("g")
+		  				.attr("class", ".boxplot")
+		  				.attr("font", "Courier")
+
+		  				.attr("transform", "translate(0," + height_box + ")")
+
+		  				.call(d3.axisBottom(x))
+		  				.attr("stroke-width", strokeWidth)
+		  				.attr("font-size", fontSize);
+
+
+			        // Show the Y scale
+			        var yCushion = 1.2; 
+			        var y = d3.scaleLinear()
+			            .domain([0, (max_val * yCushion)])
+			            .range([height_box, 0]);
+
+			        box.append("g")
+			        	.call(d3.axisLeft(y))
+			        	.attr("stroke-width", strokeWidth)
+			        	.attr("font-size", fontSize);
+
+			        
+
+		            // Show the main vertical line
+		            box
+		            .selectAll("vertLines")
+		            .data(sumstat)
+		            .enter()
+		            .append("line")
+		            .attr("stroke-width", strokeWidth)
+		            .attr("x1", function(d){return(x(d.key))})
+		            .attr("x2", function(d){return(x(d.key))})
+		            .attr("y1", function(d){return(y(d.value.min))})
+		            .attr("y2", function(d){return(y(d.value.max))})
+		            .attr("stroke", "#346beb")
+
+		            .style("opacity", "0.5")
+		            .style("width", 900);
+
+		            // rectangle for the main box
+		            var boxWidth = 500;
+		            box
+		            .selectAll("boxes")
+		          
+		            .data(sumstat)
+		            .enter()
+		            .append("rect")
+
+		            .attr("x", function(d){return(x(d.key)-boxWidth/2)})
+		            .attr("y", function(d){return(y(d.value.percentile_75))})
+		            .attr("height", function(d){return(y(d.value.percentile_25)-y(d.value.percentile_75))})
+		            .attr("width", boxWidth )
+		            .attr("stroke", "black")
+		            .attr("stroke-width", strokeWidth)
+		            .style("fill", "#346beb")
+		            .style("opacity", "0.5")
+
+		          // Show the median
+		          box
+		          .selectAll("medianLines")
+		          .data(sumstat)
+		          .enter()
+		          .append("line")
+		          .attr("stroke-width", strokeWidth)
+		          .attr("x1", function(d){return(x(d.key)-boxWidth/2) })
+		          .attr("x2", function(d){return(x(d.key)+boxWidth/2) })
+		          .attr("y1", function(d){return(y(d.value.percentile_50))})
+		          .attr("y2", function(d){return(y(d.value.percentile_50))})
+		          .attr("stroke", "white")
+
+		          .style("width", 80);
+
+		          // Add user data points
+
+                    var jitter = false; 
+		            var jitterWidth = 50;
+		          	box
+		          		.selectAll("indPoints")
+		          		.data(userData)
+		          		.enter()
+		          		.append("circle")
+		          		.attr("cx", function(d){
+		          			if (jitter){
+		          				return(x(d.Metric) - jitterWidth/2 + Math.random()*jitterWidth );
+		          			}else{
+		          				return (x(d.Metric));
+		          			}
+		          		})
+		          		.attr("cy", function(d){return(y(d.Value))})
+		          		.attr("r", 10)
+		          		.style("fill", "white")
+		          		.attr("stroke", "black");
+
+	        };
+
+	 // This is where my code more or less starts.
+	 var author = "https://github.com/Stanley-Ye/W210/blob/main/visualization/static/data/ScottFitzgerald_top5.json";
+     var temp = "static/data/ScottFitzgerald_top5.json";
+
+	 
+     // STANLEY LOOK HERE (this is the stylometric dataset):
+	 var link = "static/data/composite.json";
+
+     d3.json(link, function(new_data) {
+
+     	d3.csv("static/data/descriptions.csv", function(description_data){
+
+
+     	var orig_data = new_data.author_top5;
+     	var userData = new_data.user_metrics; 
+
+     	console.log(userData);
+
+     	let intermediate_dict = {};
+
+            // First transform the data into the format we want ----
+            // Credit to Zak Whittington for this collaboration
+            function transform (orig_data){
+
+            	for (const orig_obj of orig_data) {
+            		if (! (orig_obj.Metric in intermediate_dict))
+            			intermediate_dict[orig_obj.Metric] = {};
+            		intermediate_dict[orig_obj.Metric][orig_obj.Statistic] = orig_obj.Value;
+            	}
+            	console.log(intermediate_dict);
+            	let sumstat = [];
+            	for (const [key, val] of Object.entries(intermediate_dict)) {
+            		sumstat.push({
+            			key: key,
+            			value: val,
+            		});
+            	}
+            	console.log(sumstat);
+            	return sumstat;
+            }
+
+        var data = transform(orig_data);
+
+        // =======================================================================
+  	    // Add Button
+  	    // =======================================================================
+
+  	    function metricToDisplay(metric, display_data){
+
+  	    }
+
+  	    var button = d3.select("#metric-toggle").append('select');
+
+	    button 
+	        .selectAll('options') 
+	        .data(Object.keys(intermediate_dict))
+	        .enter()
+	        .append('option')
+	        .text(function (d) {
+
+	        	var display = "";
+
+     			for(metric of description_data){
+     				if(metric.Key == d){
+     					display = metric.Display;
+     				}
+     			}
+
+     			return display;
+	        })
+	        .attr("value", function (d) { return d; }) ;
+
+        function genSumStatGraph (data, userData, metric){
+
+
+  			// =======================================================================
+  			// Filter for metric
+  			// =======================================================================
+
+  			var sumstat = [];
+
+  			for(const level of data){
+  				if (level.key == metric){
+  					sumstat.push(level)
+  				}
+  			}
+
+  			var filteredUserData = [];
+  			for(const level of userData){
+  				if (level.Metric == metric){
+  					filteredUserData.push(level)
+  				}
+  			}
+
+
+  			var max_val = 0;
+  			for(const obj of sumstat){
+  				if(obj.value.max > max_val){
+  					max_val = obj.value.max;
+  				}
+  			}
+
+  			for(const obj of filteredUserData){
+  				if(obj.Value > max_val){
+  					console.log(obj.Value);
+  					max_val = obj.Value;
+  				}
+  			}
+
+
+  			var display = "";
+     		for(obj of description_data){
+     			if(obj.Key == metric){
+     				display = obj.Display;
+     			}
+     		}
+
+
+         	generateBoxPlot(sumstat, userData, max_val, display)
+        };
+
+
+        //var description = d3.select("#description")
+
+   		// Load descriptions
+   		function loadDescription(button){
+
+   			d3.csv("static/data/descriptions.csv", function(data){
+
+     			var selected = button.property("value");
+  
+
+     			var description = "";
+
+     			for(metric of description_data){
+     				if(metric.Key == selected){
+     					description = metric.Description;
+     				}
+     			}
+
+ 				// Select description, remove elements, then add new description
+     			var descr = d3.selectAll("#description")
+     			descr.selectAll("text").remove()
+     			descr.append('text').text(description);
+    		});
+   		};
+
+
+  		// When the button is changed, run the updateChart function
+
+  		function pickMetric (d) {
+
+    		box
+      			.selectAll("*")
+      			.remove();
+
+    
+
+      		loadDescription(button);
+      		genSumStatGraph(data, userData, d3.select(this).property("value"));
+   		};
+
+
+
+
+   		// Initialize
+   		button.on("change", pickMetric);
+   		
+
+   		loadDescription(button);
+   		genSumStatGraph(data,  userData, button.property("value"));
+   	});
+
+
+});
+
+</script>
+
+
+
+
+</body>
+</html>

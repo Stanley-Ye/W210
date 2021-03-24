@@ -1,0 +1,207 @@
+{
+  "user_metrics": [
+    {
+      "index": 0,
+      "Author": "User",
+      "Text": "I went to the beach and stretched myself out.",
+      "Metric": "avgWordFrequencyClass",
+      "Value": 1
+    },
+    {
+      "index": 0,
+      "Author": "User",
+      "Text": "I went to the beach and stretched myself out.",
+      "Metric": "hapaxLegemena",
+      "Value": 1
+    },
+    {
+      "index": 0,
+      "Author": "User",
+      "Text": "I went to the beach and stretched myself out.",
+      "Metric": "yulesK",
+      "Value": 8888.8888888889
+    }
+  ],
+  "author_top5": [
+    {
+      "Author": "Jane_Austen",
+      "Metric": "avgWordFrequencyClass",
+      "Statistic": "mean",
+      "Value": 2.3631950189
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "daleChallReadability",
+      "Statistic": "mean",
+      "Value": 14.6357698145
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "hapaxLegemena",
+      "Statistic": "mean",
+      "Value": 0.507408108
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "simpsonsIndex",
+      "Statistic": "mean",
+      "Value": 0.9905038445
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "yulesK",
+      "Statistic": "mean",
+      "Value": 2996.1904793123
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "avgWordFrequencyClass",
+      "Statistic": "min",
+      "Value": 1.6283185841
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "daleChallReadability",
+      "Statistic": "min",
+      "Value": 10.5683722689
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "hapaxLegemena",
+      "Statistic": "min",
+      "Value": 0.373015873
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "simpsonsIndex",
+      "Statistic": "min",
+      "Value": 0.9806788626
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "yulesK",
+      "Statistic": "min",
+      "Value": 1945.0104164282
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "avgWordFrequencyClass",
+      "Statistic": "max",
+      "Value": 3.1198347107
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "daleChallReadability",
+      "Statistic": "max",
+      "Value": 16.4037701195
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "hapaxLegemena",
+      "Statistic": "max",
+      "Value": 0.7362637363
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "simpsonsIndex",
+      "Statistic": "max",
+      "Value": 0.9949448529
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "yulesK",
+      "Statistic": "max",
+      "Value": 5516.2419997585
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "avgWordFrequencyClass",
+      "Statistic": "percentile_25",
+      "Value": 2.2174789621
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "daleChallReadability",
+      "Statistic": "percentile_25",
+      "Value": 14.2577614679
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "hapaxLegemena",
+      "Statistic": "percentile_25",
+      "Value": 0.4819412786
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "simpsonsIndex",
+      "Statistic": "percentile_25",
+      "Value": 0.9894408454
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "yulesK",
+      "Statistic": "percentile_25",
+      "Value": 2763.8269699741
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "avgWordFrequencyClass",
+      "Statistic": "percentile_50",
+      "Value": 2.2809213997
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "daleChallReadability",
+      "Statistic": "percentile_50",
+      "Value": 14.7165521739
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "hapaxLegemena",
+      "Statistic": "percentile_50",
+      "Value": 0.5061728395
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "simpsonsIndex",
+      "Statistic": "percentile_50",
+      "Value": 0.9907145726
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "yulesK",
+      "Statistic": "percentile_50",
+      "Value": 2969.7317406632
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "avgWordFrequencyClass",
+      "Statistic": "percentile_75",
+      "Value": 2.372283872
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "daleChallReadability",
+      "Statistic": "percentile_75",
+      "Value": 15.1312357362
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "hapaxLegemena",
+      "Statistic": "percentile_75",
+      "Value": 0.5314722888
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "simpsonsIndex",
+      "Statistic": "percentile_75",
+      "Value": 0.991704277
+    },
+    {
+      "Author": "Jane_Austen",
+      "Metric": "yulesK",
+      "Statistic": "percentile_75",
+      "Value": 3202.5336726293
+    }
+  ]
+}
