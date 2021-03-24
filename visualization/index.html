@@ -78,8 +78,10 @@
           });
       }
 
+      // STANLEY LOOK HERE (this is the sentence level probabilities)
+      var sentenceLink = "static/data/scatter.json";
 
-      d3.json("static/data/scatter.json", function (myData) {
+      d3.json(sentenceLink, function (myData) {
 
         //=========================================================================
         // Properly cast all incoming values
@@ -176,7 +178,6 @@
 
      function generateBoxPlot(sumstat, userData, max_val, metric){
 
-     	console.log(sumstat)
 
 	  			//=======================================================================
 	  			// Add Scale
@@ -302,7 +303,7 @@
      var temp = "static/data/ScottFitzgerald_top5.json";
 
 	 
-     // STANLEY LOOK HERE:
+     // STANLEY LOOK HERE (this is the stylometric dataset):
 	 var link = "static/data/composite.json";
 
      d3.json(link, function(new_data) {
