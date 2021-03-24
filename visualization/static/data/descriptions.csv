@@ -1,0 +1,11 @@
+Key,Display,Description
+countFunctionalWords,Functional Word Count,"The number of conjunctions, articles, and prepositions included, all which show relationships between the other words."
+avgWordFrequencyClass,Average Word Frequency Class,"A ""vocabulary diversity"" score, where lower numbers correspond to a greater diversity of vocabulary"
+daleChallReadability,Dale Chall Readability Score,"The score reflects reading difficulty as a function of how many ""unfamiliar words"", determined by polling students. Higher scores correspond to greater complexity. Scores below 4.9 indicate that the text could be understood by someone reading at the 4th-grade level, whereas scores above 9 indicate that the text could be understood by someone reading at the college level."
+hapaxLegemena,Hapax Legemena,The number of words that appear only once in the text.
+simpsonsIndex,Simpson's Index,The probability that two randomly chosen words will be identical
+yulesK,Yule's K,"A statistical measure of the frequency and diversity of words, where higher scores correspond to less diversity."
+specicalCharacterCount,Special Character Count,"The number of times ""special characters"" (or punctuation) is employed (""#"", ""$"", ""%"", ""&"", ""("", "")"", ""*"", ""+"", ""-"", ""/"", ""<"", ""="", '>', @, ""["", ""\\"", ""]"", ""^"", ""_"", '`', ""{"", ""|"", ""}"", '~', '\t', '\n')"
+typeTokenRatio,Type Token Ratio,The proportion of total words that are used only once.
+avgSyllablesPerWord,Average Syllables Per Word,The average number of syllables for words used.
+fleschReadingEase,Flesch Reading Ease,"The score indicates the grade-level at which someone could easily read the text, where lower scores correspond to greater complexity. For a sense of range, scores between 90-100 indicate that the text was written at a 5th-grade level, and scores lower than 10 indicate that the text was written at the college-level. "
