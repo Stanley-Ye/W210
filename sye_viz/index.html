@@ -11,7 +11,7 @@
   	 
   <div class="chart" >
 
-      <h1>EssAi Mockup</h1>
+      <h1>EssAI Mockup</h1>
       <br>
     </div>
 
@@ -82,6 +82,7 @@
       var sentenceLink = "static/data/scatter.json";
 
       d3.json(sentenceLink, function (myData) {
+		  console.log("SYE-typeof-myData: " + typeof(myData));
 
         //=========================================================================
         // Properly cast all incoming values
