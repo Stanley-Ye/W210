@@ -176,7 +176,7 @@
      	.append("g")
      	.attr("transform", "translate(" + margin_box.left + "," + margin_box.top + ")");
 
-     function generateBoxPlot(sumstat, userData, max_val, metric){
+     function generateBoxPlot(sumstat, userData, max_val, metric, metric_key){
 
 
 	  			//=======================================================================
@@ -243,7 +243,7 @@
 		            .style("width", 900);
 
 		            // rectangle for the main box
-		            var boxWidth = 500;
+		            var boxWidth = 250;
 		            box
 		            .selectAll("boxes")
 		          
@@ -255,8 +255,9 @@
 		            .attr("y", function(d){return(y(d.value.percentile_75))})
 		            .attr("height", function(d){return(y(d.value.percentile_25)-y(d.value.percentile_75))})
 		            .attr("width", boxWidth )
-		            .attr("stroke", "black")
+		          
 		            .attr("stroke-width", strokeWidth)
+                .attr("border", "0px")
 		            .style("fill", "#346beb")
 		            .style("opacity", "0.5")
 
@@ -272,29 +273,25 @@
 		          .attr("y1", function(d){return(y(d.value.percentile_50))})
 		          .attr("y2", function(d){return(y(d.value.percentile_50))})
 		          .attr("stroke", "white")
-
 		          .style("width", 80);
 
-		          // Add user data points
-
-                    var jitter = false; 
-		            var jitterWidth = 50;
-		          	box
-		          		.selectAll("indPoints")
-		          		.data(userData)
-		          		.enter()
-		          		.append("circle")
-		          		.attr("cx", function(d){
-		          			if (jitter){
-		          				return(x(d.Metric) - jitterWidth/2 + Math.random()*jitterWidth );
-		          			}else{
-		          				return (x(d.Metric));
-		          			}
-		          		})
-		          		.attr("cy", function(d){return(y(d.Value))})
-		          		.attr("r", 10)
-		          		.style("fill", "white")
-		          		.attr("stroke", "black");
+		        // Add user data points
+            box
+                  .selectAll("userLine")
+                  .data(userData)
+                  .enter()
+                  .filter(function (d){
+                    return d.Metric == metric_key;
+                  })
+              .append("line")
+              .style("stroke-dasharray", ("3, 3"))
+              .attr("stroke-width", strokeWidth)
+              .attr("x1", function(d){return(x(d.Metric)-boxWidth/2) })
+              .attr("x2", function(d){return(x(d.Metric)+boxWidth/2) })
+              .attr("y1", function(d){return(y(d.Value))})
+              .attr("y2", function(d){return(y(d.Value))})
+              .attr("stroke", "red")
+              .style("width", 80)
 
 	        };
 
@@ -327,7 +324,7 @@
             			intermediate_dict[orig_obj.Metric] = {};
             		intermediate_dict[orig_obj.Metric][orig_obj.Statistic] = orig_obj.Value;
             	}
-            	console.log(intermediate_dict);
+            
             	let sumstat = [];
             	for (const [key, val] of Object.entries(intermediate_dict)) {
             		sumstat.push({
@@ -335,7 +332,7 @@
             			value: val,
             		});
             	}
-            	console.log(sumstat);
+    
             	return sumstat;
             }
 
@@ -345,9 +342,6 @@
   	    // Add Button
   	    // =======================================================================
 
-  	    function metricToDisplay(metric, display_data){
-
-  	    }
 
   	    var button = d3.select("#metric-toggle").append('select');
 
@@ -402,7 +396,6 @@
 
   			for(const obj of filteredUserData){
   				if(obj.Value > max_val){
-  					console.log(obj.Value);
   					max_val = obj.Value;
   				}
   			}
@@ -416,7 +409,7 @@
      		}
 
 
-         	generateBoxPlot(sumstat, userData, max_val, display)
+         	generateBoxPlot(sumstat, userData, max_val, display, metric)
         };
 
 
