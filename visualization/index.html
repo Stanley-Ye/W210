@@ -169,12 +169,12 @@
 
      // append the svg object to the body of the page
      var box = d3
-     	.select("#my_dataviz")
-     	.append("svg")
-     	.attr("width", width_box + margin_box.left + margin_box.right)
-     	.attr("height", height_box + margin_box.top + margin_box.bottom)
-     	.append("g")
-     	.attr("transform", "translate(" + margin_box.left + "," + margin_box.top + ")");
+       	.select("#my_dataviz")
+       	.append("svg")
+       	.attr("width", width_box + margin_box.left + margin_box.right)
+       	.attr("height", height_box + margin_box.top + margin_box.bottom)
+       	.append("g")
+       	.attr("transform", "translate(" + margin_box.left + "," + margin_box.top + ")");
 
      function generateBoxPlot(sumstat, userData, max_val, metric, metric_key){
 
@@ -186,18 +186,10 @@
 	  			var strokeWidth = 3; 
 	  			var fontSize = 12;
 
-	  			/*
-	  			var new_collection = []
-	  			for (obj of sumstat){
-	  				obj.key = metric;
-	  				new_collection.push(obj)
-	  				console.log(sumstat)
-	  			}
-	  			*/
 
 		  			var x = d3.scaleBand()
 		  					.range([ 0, width_box])
-		  				    .domain([sumstat[0].key])
+		  				  .domain([sumstat[0].key])
 		  					.paddingInner(1)
 		  					.paddingOuter(.5);
 
@@ -205,10 +197,8 @@
 		  			box.append("g")
 		  				.attr("class", ".boxplot")
 		  				.attr("font", "Courier")
-
 		  				.attr("transform", "translate(0," + height_box + ")")
-
-		  				.call(d3.axisBottom(x))
+		  				.call(d3.axisBottom(x).tickFormat(()=>{return metric;}))
 		  				.attr("stroke-width", strokeWidth)
 		  				.attr("font-size", fontSize);
 
@@ -224,38 +214,32 @@
 			        	.attr("stroke-width", strokeWidth)
 			        	.attr("font-size", fontSize);
 
-			        
-
-		            // Show the main vertical line
-		            box
+	            // Show the main vertical line
+	            box
 		            .selectAll("vertLines")
 		            .data(sumstat)
 		            .enter()
 		            .append("line")
 		            .attr("stroke-width", strokeWidth)
-		            .attr("x1", function(d){return(x(d.key))})
-		            .attr("x2", function(d){return(x(d.key))})
-		            .attr("y1", function(d){return(y(d.value.min))})
-		            .attr("y2", function(d){return(y(d.value.max))})
+		            .attr("x1", (d) => {return(x(d.key))})
+		            .attr("x2", (d) => {return(x(d.key))})
+		            .attr("y1", (d) => {return(y(d.value.min))})
+		            .attr("y2", (d) => {return(y(d.value.max))})
 		            .attr("stroke", "#346beb")
-
 		            .style("opacity", "0.5")
 		            .style("width", 900);
 
-		            // rectangle for the main box
-		            var boxWidth = 250;
-		            box
+	            // rectangle for the main box
+	            var boxWidth = 250;
+	            box
 		            .selectAll("boxes")
-		          
 		            .data(sumstat)
 		            .enter()
 		            .append("rect")
-
-		            .attr("x", function(d){return(x(d.key)-boxWidth/2)})
-		            .attr("y", function(d){return(y(d.value.percentile_75))})
-		            .attr("height", function(d){return(y(d.value.percentile_25)-y(d.value.percentile_75))})
-		            .attr("width", boxWidth )
-		          
+		            .attr("x", (d) => {return(x(d.key)-boxWidth/2)})
+		            .attr("y", (d) => {return(y(d.value.percentile_75))})
+		            .attr("height", (d) => {return(y(d.value.percentile_25)-y(d.value.percentile_75))})
+		            .attr("width", boxWidth)
 		            .attr("stroke-width", strokeWidth)
                 .attr("border", "0px")
 		            .style("fill", "#346beb")
@@ -263,41 +247,89 @@
 
 		          // Show the median
 		          box
-		          .selectAll("medianLines")
-		          .data(sumstat)
-		          .enter()
-		          .append("line")
-		          .attr("stroke-width", strokeWidth)
-		          .attr("x1", function(d){return(x(d.key)-boxWidth/2) })
-		          .attr("x2", function(d){return(x(d.key)+boxWidth/2) })
-		          .attr("y1", function(d){return(y(d.value.percentile_50))})
-		          .attr("y2", function(d){return(y(d.value.percentile_50))})
-		          .attr("stroke", "white")
-		          .style("width", 80);
+  		          .selectAll("medianLines")
+  		          .data(sumstat)
+  		          .enter()
+  		          .append("line")
+  		          .attr("stroke-width", strokeWidth)
+  		          .attr("x1", (d) => {return(x(d.key)-boxWidth/2) })
+  		          .attr("x2", (d) => {return(x(d.key)+boxWidth/2) })
+  		          .attr("y1", (d) => {return(y(d.value.percentile_50))})
+  		          .attr("y2", (d) => {return(y(d.value.percentile_50))})
+  		          .attr("stroke", "white")
+  		          .style("width", 80);
 
 		        // Add user data points
             box
-                  .selectAll("userLine")
-                  .data(userData)
-                  .enter()
-                  .filter(function (d){
-                    return d.Metric == metric_key;
-                  })
+              .selectAll("userLine")
+              .data(userData)
+              .enter()
+              .filter((d) => {return d.Metric == metric_key;})
               .append("line")
               .style("stroke-dasharray", ("3, 3"))
               .attr("stroke-width", strokeWidth)
-              .attr("x1", function(d){return(x(d.Metric)-boxWidth/2) })
-              .attr("x2", function(d){return(x(d.Metric)+boxWidth/2) })
-              .attr("y1", function(d){return(y(d.Value))})
-              .attr("y2", function(d){return(y(d.Value))})
+              .attr("x1", (d) => {return(x(d.Metric)-boxWidth/2) })
+              .attr("x2", (d) => {return(x(d.Metric)+boxWidth/2) })
+              .attr("y1", (d) => {return(y(d.Value))})
+              .attr("y2", (d) => {return(y(d.Value))})
               .attr("stroke", "red")
               .style("width", 80)
 
+            //==========================================================================
+            // Add labels (My code starts here)
+            //==========================================================================
+
+            function addLabels(statistic, text, scale, edge = false, color = "black"){
+
+              const labelWidth = 80;
+
+              var labels = box
+                .selectAll("labels")
+                .data(sumstat)
+                .enter()
+
+              function position_x1(d){
+                if(edge){
+                  return(x(d.key)+boxWidth/2);
+                }else{
+                  return(x(d.key));
+                }
+              }
+
+              labels
+                .append("line")
+                .attr("x1", position_x1)
+                .attr("x2", (d) => {return (x(d.key) + boxWidth/2 + labelWidth);})
+                .attr("y1", (d) => {return(y(d.value[statistic]))})
+                .attr("y2", (d) => {return scale * height_box})
+                .attr("stroke", color)
+                .style("stroke-dasharray", ("3, 3"))
+                .style("stroke-width", 0.5);
+       
+
+              // Add text
+
+              labels
+                .append("text")
+                .attr('text-anchor', 'start')
+                .attr("x", (d) => {return (x(d.key) + boxWidth/2 + labelWidth);})
+                .attr("y", () => {return scale * height_box})
+                .text(text)
+       
+
+            }
+
+            addLabels("min",  " Minimum",  0.8)
+            addLabels("percentile_25", "25th Percentile", 0.65, edge = true)
+            addLabels("percentile_50", " Median", 0.5, edge = true)
+            addLabels("percentile_75", " 75th Percentile", 0.35, edge = true)
+            addLabels("max", " Maximum", 0.2)
+ 
+
 	        };
 
-	 // This is where my code more or less starts.
 	 var author = "https://github.com/Stanley-Ye/W210/blob/main/visualization/static/data/ScottFitzgerald_top5.json";
-     var temp = "static/data/ScottFitzgerald_top5.json";
+   var temp = "static/data/ScottFitzgerald_top5.json";
 
 	 
      // STANLEY LOOK HERE (this is the stylometric dataset):
@@ -345,7 +377,7 @@
 
   	    var button = d3.select("#metric-toggle").append('select');
 
-	    button 
+	      button 
 	        .selectAll('options') 
 	        .data(Object.keys(intermediate_dict))
 	        .enter()
@@ -354,59 +386,58 @@
 
 	        	var display = "";
 
-     			for(metric of description_data){
-     				if(metric.Key == d){
-     					display = metric.Display;
-     				}
-     			}
-
-     			return display;
+     			  for(metric of description_data){
+     				 if(metric.Key == d){
+     					  display = metric.Display;
+     				  }
+     			  }
+     			  return display;
 	        })
 	        .attr("value", function (d) { return d; }) ;
 
         function genSumStatGraph (data, userData, metric){
 
 
-  			// =======================================================================
-  			// Filter for metric
-  			// =======================================================================
+    			// =======================================================================
+    			// Filter for metric
+    			// =======================================================================
 
-  			var sumstat = [];
+    			var sumstat = [];
 
-  			for(const level of data){
-  				if (level.key == metric){
-  					sumstat.push(level)
-  				}
-  			}
+    			for(const level of data){
+    				if (level.key == metric){
+    					sumstat.push(level)
+    				}
+    			}
 
-  			var filteredUserData = [];
-  			for(const level of userData){
-  				if (level.Metric == metric){
-  					filteredUserData.push(level)
-  				}
-  			}
-
-
-  			var max_val = 0;
-  			for(const obj of sumstat){
-  				if(obj.value.max > max_val){
-  					max_val = obj.value.max;
-  				}
-  			}
-
-  			for(const obj of filteredUserData){
-  				if(obj.Value > max_val){
-  					max_val = obj.Value;
-  				}
-  			}
+    			var filteredUserData = [];
+    			for(const level of userData){
+    				if (level.Metric == metric){
+    					filteredUserData.push(level)
+    				}
+    			}
 
 
-  			var display = "";
-     		for(obj of description_data){
-     			if(obj.Key == metric){
-     				display = obj.Display;
-     			}
-     		}
+    			var max_val = 0;
+    			for(const obj of sumstat){
+    				if(obj.value.max > max_val){
+    					max_val = obj.value.max;
+    				}
+    			}
+
+    			for(const obj of filteredUserData){
+    				if(obj.Value > max_val){
+    					max_val = obj.Value;
+    				}
+    			}
+
+
+    			var display = "";
+       		for(obj of description_data){
+       			if(obj.Key == metric){
+       				display = obj.Display;
+       			}
+       		}
 
 
          	generateBoxPlot(sumstat, userData, max_val, display, metric)

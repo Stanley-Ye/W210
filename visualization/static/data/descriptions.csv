@@ -9,3 +9,4 @@ specicalCharacterCount,Special Character Count,"The number of times ""special ch
 typeTokenRatio,Type Token Ratio,The proportion of total words that are used only once.
 avgSyllablesPerWord,Average Syllables Per Word,The average number of syllables for words used.
 fleschReadingEase,Flesch Reading Ease,"The score indicates the grade-level at which someone could easily read the text, where lower scores correspond to greater complexity. For a sense of range, scores between 90-100 indicate that the text was written at a 5th-grade level, and scores lower than 10 indicate that the text was written at the college-level. "
+avgWordLength,Average Word Length,"The average number of letters for words used."
