@@ -18,9 +18,10 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://d3js.org/d3.v4.js"></script>
 
+  <script>
+    var docText = <?= docText ?>;
+  </script>
 
-  
-  
   <?!=HtmlService.createHtmlOutputFromFile('styles.css').getContent()?>
   <?!=HtmlService.createHtmlOutputFromFile('js_histogram').getContent()?>
   <?!=HtmlService.createHtmlOutputFromFile('js_api_call').getContent()?>
