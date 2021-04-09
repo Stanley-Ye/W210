@@ -1,0 +1,189 @@
+<script>
+
+		function add_row_to_table(sentences){
+
+			var table = document.getElementById("sentence-body");
+			var rowNumber = 0; 
+			var sentences = JSON.parse(sentences);
+
+			for(s of sentences){
+			
+				var row = table.insertRow(rowNumber);
+				row.setAttribute("style", "height: 1px")
+				row.setAttribute("class", "sentence-row")
+
+				row.insertCell(0).innerHTML = `<div>
+													<p class="original text-display">${s["sentence"]}</p>
+													<p class="diff text-display"></p>
+												</div>`;
+
+				row.insertCell(1).innerHTML =  `<textarea class = "notes default"></textarea>`;
+				//row.insertCell(2).innerHTML =  `<p class="hint text-display">${s["blanked"]}</p>`;
+				row.insertCell(2).innerHTML =  `<textarea class = "replication default"
+														  width = "25%"></textarea>`;
+
+
+				rowNumber = ++rowNumber;
+
+			}
+		} 
+
+	function diff_text(){
+
+			var diffs = document.getElementsByClassName("diff");
+			var originals = document.getElementsByClassName("original");
+			var replications = document.getElementsByClassName("replication");
+			var n_sentences = Array(diffs.length).keys();
+			button = document.getElementById("diff-button");
+
+			if(IN_DIFF_MODE){
+				
+				$(".diff").hide()
+				$(".original").show()
+
+				button.textContent = 'See Differences'
+				IN_DIFF_MODE = false;
+
+			}else{
+				
+				for (i of n_sentences){
+					$(".diff").show()
+					$(".original").hide()
+					diffs[i].innerHTML = diffString(originals[i].innerHTML, replications[i].value);		
+				}
+
+				button.textContent = 'See Original Text'
+				IN_DIFF_MODE = true;
+
+			}
+		}
+
+		function blur_text(){
+
+			button = document.getElementById("blurButton")
+
+			if(BLURRED){
+				var color = "black";
+				var textShadow = "0 0 0 rgba(0,0,0,0)";
+				BLURRED = false;
+				button.textContent = 'Blur'
+			}else{
+				var color = "transparent";
+				var textShadow = "0 0 5px rgba(0,0,0,0.2)";
+				BLURRED = true;
+				button.textContent = 'Unblur'
+			}
+
+			for (s of document.getElementsByClassName("original")){
+				s.style.color = color;
+				s.style.textShadow = textShadow;
+			}
+
+		}
+
+		function submit_replications(){
+
+			var originals = document.getElementsByClassName("original");
+			var replications = document.getElementsByClassName("replication");
+			var n_sentences = Array(originals.length).keys();
+			var gathered = []
+			var send = true;
+ 			
+			for (i of n_sentences){
+	
+				if ("" == replications[i].value){
+					send = false;
+					alert("Please fill out all sentences!")
+					break
+				}else{
+					gathered.push({
+						index: i,
+						original_text: originals[i].innerHTML,
+						recreation: replications[i].value
+					})
+				}
+			}
+
+
+			if(send){
+				$("#loader").show();
+				call_aws(config.STYLOMETRY_API,
+	    		         "Austen",
+	    		         JSON.stringify({"text": gathered}),
+	    		         config.STYLOMETRY_LINK,
+	    		         gen_visualization_block);
+			}
+			
+		} 
+
+
+
+		function reset_table(){
+
+			// Reset text area
+			document.getElementById("text-entry").value = "";
+
+      /*
+			button = document.getElementById("diff-button");
+			button.textContent = 'See Differences'*/
+
+			// Reset sentence table body
+			$("#histogram svg").remove();
+			$(".visualizations").hide();
+			$("#metric-toggle").hide();
+			$("#sentence-body tr").remove();
+		}
+
+	  function text_submit(){
+
+	    	var text = document.getElementById("text-entry").value.replace(/\n/g, "  ");
+
+			  $("#loader").show();
+
+	      call_aws(config.SPLITTER_API,
+					      'Austen',  
+					      JSON.stringify({"in_txt": text,"keep_pos":["PUNCT","CCONJ", "NOUN"],"stage":"prod"}),
+					      config.SPLITTER_LINK,
+					      add_row_to_table);
+
+	      $("#loader").hide();
+	    }
+
+	  function gen_visualization_block(data){
+
+	    var metrics = [ {metric : "wordCount", display : "Sentence Length (Number of Words)"},
+                      {metric : "avgWordLength", display : "Average Word Length"},
+                      {metric : "avgSyllablesPerWord", display : "Average Syllables per Word"},
+                      {metric : "NOUN", display : "Number of Nouns"}, 
+                      {metric : "PROPN", display : "Number of Prepositions"},
+                      {metric : "VERB", display : "Number of Verbs"},
+                      {metric : "ADJ", display : "Number of Adjectives"},
+                      {metric : "ADV", display : "Number of Adverbs"},
+                      {metric : "PRON", display : "Number of Pronouns"},
+			                {metric : "CCONJ", display : "Number of Conjunctions"} ];
+
+	    	init_metric_button(data, metrics);
+	    	gen_histogram(data, metrics, d3.select("#metric-toggle").property("value"));
+	    	
+	    	$(".visualizations").show();
+	    	$("#loader").hide();
+	    }
+
+	  function init_metric_button(data, metrics){
+
+			var metric_button = d3
+				.select("#metric-toggle")
+				.selectAll("options")
+				.data(metrics)
+				.enter()
+				.append("option")
+				.text((d) => d.display)
+				.attr("value" ,(d) => d.metric);
+
+			d3.select("#metric-toggle").on("change", function (d){
+				return gen_histogram(data, metrics, d3.select(this).property("value"));
+			});
+
+	  }
+
+</script>

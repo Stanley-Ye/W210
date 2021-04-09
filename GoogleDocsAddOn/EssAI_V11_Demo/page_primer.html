@@ -1,0 +1,48 @@
+<div id = "primer">
+
+	<h2>EssAI Primer</h2>
+
+   	<h3>Instructions</h3>
+  			<ol>
+			    <li><button id = "submit-author-text-button" onclick="text_submit()">Add Text to Table</button></li>
+			  	<li><button id = "blurButton" onclick="blur_text()">Blur</button></li>
+				  <li><button id = "stylometry-button" onclick="submit_replications()">Get Stylometric Features</button></li>
+				  <li><button id = "reset-button" onclick="reset_table()">Reset</button></li>
+			  </ol>
+      <textarea id = "text-entry" cols = "50" rows = "5"></textarea>
+      
+	<br>
+	<div id="loader"></div>
+	<br>
+
+	<div class="visualizations">
+
+		<text class="visualizations">
+			Pick a metric, and hover over each bar to compare sentences side by side.
+		</text>
+
+		<br>
+
+		<h4>Metric</h4>
+
+		<select id="metric-toggle"></select>
+
+		<br>
+
+		<div id="histogram"></div>
+
+		<br><br><br>
+	</div>
+
+	<table id = "sentences" border="3px" width = "90%">
+		<thead>
+			<th width = "33%">Original Sentence</th>
+			<th width = "33%">Notes</th>
+			<th width = "33%">User Replications</th>
+		</thead>
+		<tbody id = "sentence-body"></tbody>
+	</table>
+
+	<br><br>
+
+</div>

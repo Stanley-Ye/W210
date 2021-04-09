@@ -1,0 +1,85 @@
+<div id = "pro" height = "100%">
+
+	<style>
+		.pro-scaffold {
+			height: 100%;
+			width: 100%;
+			margin-top: 30px;
+
+		}			
+
+		.instructions {
+			width: 40%;
+  			height: 100%;
+  			padding-right: 20%;
+		}
+
+		.sentence-frame{
+			margin-top: 20px;
+			border-style: solid;
+			border-width: 5px;
+			border-color: black;
+			overflow: scroll;
+			font-family: Arial;
+			font-weight: bold;
+
+		}
+
+    #user-text-from-doc {
+  		padding: 20px 20px 20px;
+		}
+
+
+	</style>
+
+
+
+
+
+		<div class = "pro-scaffold">
+
+			<div class = ".instructions">
+
+
+			    <h3>EssAI Pro</h3>
+
+			    <p>
+			    	Please select an author.
+			    </p>
+
+				  <input type="radio" name ="author-selection" value="Austen, Jane" checked>
+				  <label for="author-austen">Jane Austen</label>
+				  <br>
+				  <input type="radio" name ="author-selection" value="Twain, Mark">
+				  <label for="author-twain">Mark Twain</label>
+
+				  <br><br>
+			      <button onclick="get_bert_probs()">Submit for Scoring</button>
+
+			    <br><br>
+
+
+			    <p>
+			    	Sentences that were classified as likely being written by the selected author
+			    	are in <text style = "color:green">green</text>, and the others are  <text style = "color:red">red</text>.
+			    </p>
+			      <button onclick="changeSentenceOrder('index')">Order by Appearance</button>
+			      <br>
+			      <button onclick="changeSentenceOrder('ProbabilityRank')">Order by Probability</button>
+			    <br><br>
+
+			</div>
+
+
+			<div class = "sentence-frame">
+			     <div id="sentence-order-list"></div>
+           <script>
+                var docText = <?= docText ?>;
+                document.getElementById("sentence-order-list").innerHTML = `<p id = "user-text-from-doc">${docText}</p>`;
+             </script>
+			</div>
+
+
+		</div>
+
+</div>
